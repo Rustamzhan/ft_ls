@@ -15,6 +15,7 @@
 static void	ft_attr(char *name, t_opt **option, struct stat *buf, t_f **list)
 {
 	(*list)->file_name = ft_strdup(name);
+	(*list)->path_name = NULL;
 	(*list)->type = ft_get_type(buf->st_mode);
 	(*list)->time = buf->st_mtime;
 	((*option)->u) ? ((*list)->time = buf->st_atime) : 0;
@@ -73,6 +74,8 @@ void		ft_save_file_attr(t_list *names, t_opt **option)
 	{
 		lstat(names->content, buf);
 		ft_attr(names->content, option, buf, &list);
+		list->prev = NULL;
+		list->next = NULL;
 		if (names->next)
 		{
 			list->next = malloc(sizeof(t_f));
@@ -81,6 +84,8 @@ void		ft_save_file_attr(t_list *names, t_opt **option)
 		names = names->next;
 	}
 	free(buf);
+	((*option)->t) ? ft_sort_by_time(&list) : 0;
+	((*option)->r) ? ft_rev_sort(&list) : 0;
 	print_list(head, *option);
 	ft_free_files_list(&head, *option);
 }

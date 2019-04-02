@@ -26,14 +26,20 @@
 # define MAX2 ((*option)->max_user_len)
 # define MAX3 ((*option)->max_group_len)
 # define MAX4 ((*option)->max_size_len)
+# define MAX5 ((*option)->max_upper_num)
+# define MAX6 ((*option)->max_lower_num)
 # define CUR1 ((*list)->link_len)
 # define CUR2 ((*list)->user_len)
 # define CUR3 ((*list)->group_len)
 # define CUR4 ((*list)->size_len)
+# define CUR5 ((*list)->upper_len)
+# define CUR6 ((*list)->lower_len)
 # define A ((*option)->a)
 
 typedef struct	s_file_attr
 {
+	char				*upper_num;
+	char				*lower_num;
 	char				*path_name;
 	char				*dir_name;
 	char				type;
@@ -49,18 +55,24 @@ typedef struct	s_file_attr
 	struct s_file_attr	*prev;
 	struct s_file_attr	*next_dir;
 	struct s_file_attr	*recursive;
+	int					blocks;
 	int					link_len;
 	int					user_len;
 	int					group_len;
 	int					size_len;
+	int					upper_len;
+	int					lower_len;
 }				t_f;
 
 typedef struct	s_options
 {
+	int	all_bl;
 	int	max_link_len;
 	int	max_user_len;
 	int	max_group_len;
 	int	max_size_len;
+	int	max_upper_num;
+	int max_lower_num;
 	int	rec;
 	int	a;
 	int	r;
@@ -87,5 +99,10 @@ void			ft_save_dir_inf(t_list *file, t_list *name, t_opt **option);
 void			ft_save_file_attr(t_list *names, t_opt **option);
 void			ft_sort_by_time(t_f **list);
 void			ft_free_dir_list(t_f **list, t_opt *o);
+void			ft_rev_sort(t_f **list);
+void			ft_sort_struct(t_list **lst, int r);
+t_list			*ft_sort_by_names(DIR *dir, int r);
+void			ft_check_for_max(t_f **list, t_opt **option);
+void			ft_null_max(t_opt **option);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: astanton <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/01 10:46:08 by astanton          #+#    #+#             */
-/*   Updated: 2019/04/01 11:40:55 by astanton         ###   ########.fr       */
+/*   Updated: 2019/04/02 20:29:48 by astanton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,13 @@ static void	ft_zero_option(t_opt **o)
 	a->t = 0;
 	a->u = 0;
 	a->c = 0;
+	a->all_bl = 0;
 	a->max_link_len = 0;
 	a->max_user_len = 0;
 	a->max_group_len = 0;
 	a->max_size_len = 0;
+	a->max_upper_num = 0;
+	a->max_lower_num = 0;
 }
 
 int			ft_check_and_save_opt(int ac, char **av, t_opt **opt, int i)

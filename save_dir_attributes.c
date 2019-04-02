@@ -6,7 +6,7 @@
 /*   By: astanton <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/01 10:52:03 by astanton          #+#    #+#             */
-/*   Updated: 2019/04/01 12:22:17 by astanton         ###   ########.fr       */
+/*   Updated: 2019/04/02 20:39:46 by astanton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,51 +19,52 @@ static void	save_attr(t_f **list, t_opt **option)
 	buf = malloc(sizeof(struct stat));
 	lstat((*list)->path_name, buf);
 	(*list)->type = ft_get_type(buf->st_mode);
-	(*list)->prev = NULL;
 	(*list)->time = buf->st_mtime;
 	((*option)->u) ? ((*list)->time = buf->st_atime) : 0;
 	((*option)->c) ? ((*list)->time = buf->st_ctime) : 0;
 	if ((*option)->l)
 	{
+		(*list)->blocks = buf->st_blocks;
 		(*list)->time_str = ft_get_time((*list)->time);
 		ft_get_owner_and_group_name(buf->st_uid, buf->st_gid, list);
 		(*list)->links_number = ft_itoa(buf->st_nlink);
-		CUR1 = ft_strlen((*list)->links_number);
-		MAX1 = (MAX1 < CUR1) ? CUR1 : MAX1;
 		(*list)->size_of_file = ft_itoa(buf->st_size);
-		CUR4 = ft_strlen((*list)->size_of_file);
-		MAX4 = (MAX4 < CUR4) ? CUR4 : MAX4;
+		if ((*list)->type == 'b' || (*list)->type == 'c')
+		{
+			(*list)->upper_num = ft_itoa(major(buf->st_rdev));
+			(*list)->lower_num = ft_itoa(minor(buf->st_rdev));
+		}
 		(*list)->acces = ft_get_acces(buf->st_mode);
-		CUR2 = ft_strlen((*list)->owner_name);
-		MAX2 = (MAX2 < CUR2) ? CUR2 : MAX2;
-		CUR3 = ft_strlen((*list)->group_name);
-		MAX3 = (MAX3 < CUR3) ? CUR3 : MAX3;
+		ft_check_for_max(list, option);
 	}
 	free(buf);
 }
 
-static void	ft_save_dir_attr(char *name, t_f **list, t_opt **option, DIR *dir)
+static void	ft_save_dir_a(char *dir, t_list **name, t_f **list, t_opt **option)
 {
 	struct dirent	*inf;
 	t_f				*cur;
 
-	inf = readdir(dir);
 	cur = *list;
-	while (inf)
+	cur->prev = NULL;
+	while (*name)
 	{
-		cur->dir_name = ft_strdup(name);
-		cur->file_name = ft_strdup(inf->d_name);
-		cur->path_name = ft_get_path(cur->file_name, name);
+		cur->file_name = ft_strdup((*name)->content);
+		cur->path_name = ft_get_path(cur->file_name, dir);
 		cur->recursive = NULL;
 		cur->next_dir = NULL;
 		cur->next = NULL;
 		save_attr(&cur, option);
-		if ((inf = readdir(dir)))
+		(A || (!A && (*(cur->file_name) != '.'))) ?
+			(*option)->all_bl += cur->blocks : 0;
+		if ((*name = (*name)->next))
 		{
 			cur->next = malloc(sizeof(t_f));
+			cur->next->prev = cur;
 			cur = cur->next;
 		}
 	}
+	free_names(name, NULL, NULL);
 }
 
 static void	ft_recursive_save(t_f **list, t_opt **option)
@@ -74,7 +75,8 @@ static void	ft_recursive_save(t_f **list, t_opt **option)
 	while (cur)
 	{
 		if (cur->type == 'd' && ft_strcmp(cur->file_name, ".") &&
-				ft_strcmp(cur->file_name, "..") && ((!A && *(cur->file_name) != '.') || A))
+				ft_strcmp(cur->file_name, "..") &&
+				((!A && *(cur->file_name) != '.') || A))
 		{
 			cur->recursive = malloc(sizeof(t_f));
 			ft_putstr("\n");
@@ -85,23 +87,24 @@ static void	ft_recursive_save(t_f **list, t_opt **option)
 		}
 		else
 			cur->recursive = NULL;
-		cur = cur->next;
+		cur = ((*option)->r) ? cur->prev : cur->next;
 	}
 }
 
 static void	ft_create_and_print_at(char *name, t_opt **option, t_f **list)
 {
-	DIR	*dir;
-	t_f	*cur;
+	DIR		*dir;
+	t_f		*cur;
+	t_list	*names;
 
-	(*option)->max_link_len = 0;
-	(*option)->max_user_len = 0;
-	(*option)->max_group_len = 0;
-	(*option)->max_size_len = 0;
+	ft_null_max(option);
 	if ((dir = opendir(name)))
 	{
-		ft_save_dir_attr(name, list, option, dir);
+		names = ft_sort_by_names(dir, 0);
 		closedir(dir);
+		ft_save_dir_a(name, &names, list, option);
+		((*option)->t) ? ft_sort_by_time(list) : 0;
+		((*option)->r) ? ft_rev_sort(list) : 0;
 		print_list(*list, *option);
 	}
 	else

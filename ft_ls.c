@@ -6,29 +6,52 @@
 /*   By: astanton <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/01 10:28:47 by astanton          #+#    #+#             */
-/*   Updated: 2019/04/01 11:56:05 by astanton         ###   ########.fr       */
+/*   Updated: 2019/04/02 20:23:28 by astanton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-static void		ft_print_empty_task(char *dirname)
+static void		ft_print_empty_task(t_list **name)
+{
+	t_list	*cur;
+
+	cur = *name;
+	ft_sort_struct(name, 0);
+	while (cur)
+	{
+		ft_putstr(cur->content);
+		ft_putstr("\n");
+		cur = cur->next;
+	}
+	free_names(name, NULL, NULL);
+}
+
+static void		ft_save_empty_task(char *dirname)
 {
 	DIR				*dir;
 	struct dirent	*entry;
-	int				i;
+	t_list			*name;
+	t_list			*head;
 
 	dir = opendir(dirname);
-	while ((entry = readdir(dir)))
+	entry = readdir(dir);
+	name = NULL;
+	while (entry)
 	{
-		i = -1;
-		if ((entry->d_name)[0] != '.')
+		if (!name)
 		{
-			ft_putstr(entry->d_name);
-			write(1, "\n", 1);
+			name = ft_lstnew(NULL, 0);
+			head = name;
 		}
+		if ((entry->d_name)[0] != '.')
+			name->content = ft_strdup(entry->d_name);
+		if ((entry = readdir(dir)) && name->content)
+			name->next = ft_lstnew(NULL, 0);
+		name = name->next;
 	}
 	closedir(dir);
+	ft_print_empty_task(&head);
 }
 
 static void		ft_error_use(t_list **names, t_list **head, t_list **prev)
@@ -80,7 +103,7 @@ int				main(int ac, char **av)
 	int		i;
 
 	if (ac == 1)
-		ft_print_empty_task(".");
+		ft_save_empty_task(".");
 	else
 	{
 		i = 0;

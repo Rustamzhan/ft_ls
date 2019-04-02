@@ -6,7 +6,7 @@
 /*   By: astanton <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/01 10:17:48 by astanton          #+#    #+#             */
-/*   Updated: 2019/04/01 10:18:41 by astanton         ###   ########.fr       */
+/*   Updated: 2019/04/02 19:54:50 by astanton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,18 @@ void	free_names(t_list **lst, t_list **f, t_list **d)
 		free((*lst)->content);
 		cur = (*lst)->next;
 		free(*lst);
+		*lst = NULL;
 		*lst = cur;
 	}
-	while (*f)
+	while (f && *f)
 	{
 		free((*f)->content);
 		cur = (*f)->next;
 		free(*f);
+		*f = NULL;
 		*f = cur;
 	}
-	while (*d)
+	while (d && *d)
 	{
 		free((*d)->content);
 		cur = (*d)->next;
@@ -46,9 +48,8 @@ void	ft_free_dir_list(t_f **list, t_opt *o)
 	f = *list;
 	while (f)
 	{
-		free(f->dir_name);
 		free(f->path_name);
-		free(f->file_name);	
+		free(f->file_name);
 		if (o->l)
 		{
 			free(f->time_str);

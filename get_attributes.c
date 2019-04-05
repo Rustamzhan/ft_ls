@@ -40,12 +40,23 @@ char	*ft_get_time(time_t date)
 
 	i = 3;
 	j = -1;
-	str = ft_strdup(ctime(&date));
+	str = ctime(&date);
 	t = malloc(sizeof(char) * 13);
-	while (++i < 16)
+	while (++i < 10)
 		t[++j] = str[i];
+	if (time(NULL) - date > 15552000 || (date - time(NULL) > 3600))
+		{
+			i = 18;
+			t[++j] = ' ';
+			while (++i < 24)
+				t[++j] = str[i];
+		}
+	else
+	{
+		while (i < 16)
+			t[++j] = str[i++];
+	}
 	t[++j] = '\0';
-	free(str);
 	return (t);
 }
 

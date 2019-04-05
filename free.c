@@ -46,22 +46,31 @@ void	ft_free_dir_list(t_f **list, t_opt *o)
 	t_f	*f;
 
 	f = *list;
-	while (f)
+	if ((*list)->error)
 	{
-		free(f->path_name);
-		free(f->file_name);
-		if (o->l)
-		{
-			free(f->time_str);
-			free(f->links_number);
-			free(f->size_of_file);
-			free(f->acces);
-			free(f->owner_name);
-			free(f->group_name);
-		}
 		f = f->next;
 		free(*list);
-		*list = NULL;
 		*list = f;
+	}
+	else
+	{	
+		while (f )
+		{
+			free(f->path_name);
+			free(f->file_name);
+			if (o->l)
+			{
+				free(f->time_str);
+				free(f->links_number);
+				free(f->size_of_file);
+				free(f->acces);
+				free(f->owner_name);
+				free(f->group_name);
+			}
+			f = f->next;
+			free(*list);
+			*list = NULL;
+			*list = f;
+		}
 	}
 }

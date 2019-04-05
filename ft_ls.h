@@ -53,7 +53,6 @@ typedef struct	s_file_attr
 	char				*file_name;
 	struct s_file_attr	*next;
 	struct s_file_attr	*prev;
-	struct s_file_attr	*next_dir;
 	struct s_file_attr	*recursive;
 	int					blocks;
 	int					link_len;
@@ -62,6 +61,7 @@ typedef struct	s_file_attr
 	int					size_len;
 	int					upper_len;
 	int					lower_len;
+	int					error;
 }				t_f;
 
 typedef struct	s_options

@@ -17,7 +17,17 @@ static void	save_attr(t_f **list, t_opt **option)
 	struct stat	*buf;
 
 	buf = malloc(sizeof(struct stat));
-	lstat((*list)->path_name, buf);
+	if (lstat((*list)->path_name, buf) == -1)
+	{
+		(*list)->error = 1;
+		ft_print_error((*list)->path_name);
+		free((*list)->path_name);
+		free((*list)->file_name);
+		free(buf);
+		return ;
+	}
+	else
+		(*list)->error = 0;	
 	(*list)->type = ft_get_type(buf->st_mode);
 	(*list)->time = buf->st_mtime;
 	((*option)->u) ? ((*list)->time = buf->st_atime) : 0;
@@ -52,12 +62,11 @@ static void	ft_save_dir_a(char *dir, t_list **name, t_f **list, t_opt **option)
 		cur->file_name = ft_strdup((*name)->content);
 		cur->path_name = ft_get_path(cur->file_name, dir);
 		cur->recursive = NULL;
-		cur->next_dir = NULL;
 		cur->next = NULL;
 		save_attr(&cur, option);
-		(A || (!A && (*(cur->file_name) != '.'))) ?
+		(!cur->error && (A || (!A && (*(cur->file_name) != '.')))) ?
 			(*option)->all_bl += cur->blocks : 0;
-		if ((*name = (*name)->next))
+		if ((*name = (*name)->next) && !cur->error)
 		{
 			cur->next = malloc(sizeof(t_f));
 			cur->next->prev = cur;
@@ -136,8 +145,8 @@ void		ft_save_dir_inf(t_list *file, t_list *name, t_opt **option)
 		ft_create_and_print_at(name->content, option, &list);
 		if (name->next)
 		{
-			list->next_dir = malloc(sizeof(t_f));
-			list = list->next_dir;
+			list->next = malloc(sizeof(t_f));
+			list = list->next;
 		}
 		count = 1;
 		name = name->next;

@@ -25,7 +25,6 @@ static void	ft_print_spaces(int max, int cur)
 
 static void	ft_print_dev(t_f *list, t_opt *opt)
 {
-	ft_print_spaces(opt->max_group_len, list->group_len);
 	ft_print_spaces(opt->max_upper_num, list->upper_len - 1);
 	ft_putstr(list->upper_num);
 	write(1, ",", 1);
@@ -54,12 +53,13 @@ static void	ft_print_l(t_f *list, t_opt *opt)
 	ft_putstr(list->owner_name);
 	ft_print_spaces(opt->max_user_len, list->user_len - 1);
 	ft_putstr(list->group_name);
+	ft_print_spaces(opt->max_group_len, list->group_len);
 	if (list->type == 'b' || list->type == 'c')
 		ft_print_dev(list, opt);
 	else
 	{
 		(opt->max_upper_num) ?
-			ft_print_spaces(opt->max_group_len, 1) : 0;
+			ft_print_spaces(opt->max_upper_num + opt->max_lower_num + 1, 0) : 0;
 		ft_print_spaces(opt->max_size_len, list->size_len);
 		ft_putstr(list->size_of_file);
 	}
@@ -75,7 +75,7 @@ void		print_list(t_f *list, t_opt *opt)
 	(opt->l && list->path_name) ? ft_putstr("\n") : 0;
 	while (list)
 	{
-		if (opt->a || *(list->file_name) != '.')
+		if ((opt->a || *(list->file_name) != '.') && !list->error)
 		{
 			if (opt->l == 1)
 				ft_print_l(list, opt);

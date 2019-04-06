@@ -59,7 +59,7 @@ static void	ft_save_dir_a(char *dir, t_list **name, t_f **list, t_opt **option)
 	cur->prev = NULL;
 	while (*name)
 	{
-		cur->file_name = ft_strdup((*name)->content);
+		cur->file_name= ft_strdup((*name)->content);
 		cur->path_name = ft_get_path(cur->file_name, dir);
 		cur->recursive = NULL;
 		cur->next = NULL;
@@ -83,7 +83,7 @@ static void	ft_recursive_save(t_f **list, t_opt **option)
 	cur = *list;
 	while (cur)
 	{
-		if (cur->type == 'd' && ft_strcmp(cur->file_name, ".") &&
+		if (cur->type == 'd' && !(*list)->error && ft_strcmp(cur->file_name, ".") &&
 				ft_strcmp(cur->file_name, "..") &&
 				((!A && *(cur->file_name) != '.') || A))
 		{
@@ -118,8 +118,7 @@ static void	ft_create_and_print_at(char *name, t_opt **option, t_f **list)
 	}
 	else
 	{
-		free(*list);
-		*list = NULL;
+		cur->error = 1;
 		ft_print_error(name);
 	}
 	((*option)->rec) ? ft_recursive_save(list, option) : 0;
@@ -143,13 +142,10 @@ void		ft_save_dir_inf(t_list *file, t_list *name, t_opt **option)
 			ft_putstr(":\n");
 		}
 		ft_create_and_print_at(name->content, option, &list);
+		ft_free_dir_list(&head, *option);
 		if (name->next)
-		{
-			list->next = malloc(sizeof(t_f));
-			list = list->next;
-		}
+			list = malloc(sizeof(t_f));
 		count = 1;
 		name = name->next;
 	}
-	ft_free_dir_list(&head, *option);
 }

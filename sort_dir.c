@@ -12,8 +12,6 @@
 
 #include "ft_ls.h"
 
-void	ft_sort(t_list **list, int len);
-
 t_list	*ft_sort_by_names(DIR *dir, int r)
 {
 	struct dirent	*inf;
@@ -89,6 +87,46 @@ void	ft_sort(t_list **list, int len)
 	while (--i > 0)
 	{
 		if (ft_strcmp(stack[i]->content, stack[i - 1]->content) < 0)
+		{
+			temp = stack[i];
+			stack[i] = stack[i - 1];
+			stack[i - 1] = temp;
+			count = 1;
+		}
+		if (i == 1 && count)
+		{
+			count = 0;
+			i = len - 1;
+		}
+	}
+	i = -1;
+	while (++i < len - 1)
+		stack[i]->next = stack[i + 1];
+	*list = stack[0];	
+	free(stack);
+}
+
+void	ft_sort_list(t_f **list, int len)
+{
+	t_f	**stack;
+	t_f	*cur;
+	t_f	*temp;
+	int		i;
+	int		count;
+
+	stack = malloc(sizeof(t_list *) * len);
+	cur = *list;
+	i = -1;
+	while (cur)
+	{
+		stack[++i] = cur;
+		cur = cur->next;
+	}
+	stack[++i] = NULL;
+	count = 0;
+	while (--i > 0)
+	{
+		if (ft_strcmp(stack[i]->file_name, stack[i - 1]->file_name) < 0)
 		{
 			temp = stack[i];
 			stack[i] = stack[i - 1];

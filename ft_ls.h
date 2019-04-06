@@ -41,7 +41,6 @@ typedef struct	s_file_attr
 	char				*upper_num;
 	char				*lower_num;
 	char				*path_name;
-	char				*dir_name;
 	char				type;
 	char				*acces;
 	char				*links_number;
@@ -104,5 +103,9 @@ void			ft_sort_struct(t_list **lst, int r);
 t_list			*ft_sort_by_names(DIR *dir, int r);
 void			ft_check_for_max(t_f **list, t_opt **option);
 void			ft_null_max(t_opt **option);
+void			ft_sort(t_list **list, int len);
+void			ft_sort_list(t_f **list, int len);
+void    ft_save(t_list  *file, t_list   *dir, t_opt **options);
+void    ft_save_and_print(char *name, t_opt **option);
 
 #endif

@@ -27,7 +27,7 @@ static void		ft_print_empty_task(t_list **name)
 	free_names(name, NULL, NULL);
 }
 
-static void		ft_save_empty_task(char *dirname)
+static void		ft_save_and_print_empty_task(char *dirname)
 {
 	DIR				*dir;
 	struct dirent	*entry;
@@ -47,8 +47,10 @@ static void		ft_save_empty_task(char *dirname)
 		if ((entry->d_name)[0] != '.')
 			name->content = ft_strdup(entry->d_name);
 		if ((entry = readdir(dir)) && name->content)
+		{
 			name->next = ft_lstnew(NULL, 0);
-		name = name->next;
+			name = name->next;
+		}
 	}
 	closedir(dir);
 	ft_print_empty_task(&head);
@@ -103,7 +105,7 @@ int				main(int ac, char **av)
 	int		i;
 
 	if (ac == 1)
-		ft_save_empty_task(".");
+		ft_save_and_print_empty_task(".");
 	else
 	{
 		i = 0;
@@ -115,7 +117,7 @@ int				main(int ac, char **av)
 		if (files)
 			ft_save_file_attr(files, &option);
 		if (directories)
-			ft_save_dir_inf(files, directories, &option);
+			ft_save(files, directories, &option);
 		free(option);
 		free_names(&names, &files, &directories);
 	}

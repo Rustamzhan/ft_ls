@@ -70,12 +70,12 @@ static void	ft_print_l(t_f *list, t_opt *opt)
 
 void		print_list(t_f *list, t_opt *opt)
 {
-	(opt->l && list->path_name) ? ft_putstr("total ") : 0;
-	(opt->l && list->path_name) ? ft_putnbr(opt->all_bl) : 0;
-	(opt->l && list->path_name) ? ft_putstr("\n") : 0;
+	(opt->l && list && list->path_name) ? ft_putstr("total ") : 0;
+	(opt->l && list && list->path_name) ? ft_putnbr(opt->all_bl) : 0;
+	(opt->l && list && list->path_name) ? ft_putstr("\n") : 0;
 	while (list)
 	{
-		if ((opt->a || *(list->file_name) != '.') && !list->error)
+		if ((opt->a || *(list->file_name) != '.'))
 		{
 			if (opt->l == 1)
 				ft_print_l(list, opt);
@@ -84,6 +84,6 @@ void		print_list(t_f *list, t_opt *opt)
 				ft_print_link(list->path_name);
 			write(1, "\n", 1);
 		}
-		list = (opt->r) ? list->prev : list->next;
+		list = list->next;
 	}
 }

@@ -22,6 +22,7 @@
 # include <sys/xattr.h>
 # include <sys/types.h>
 # include <sys/stat.h>
+# include <sys/ioctl.h>
 # define MAX1 ((*option)->max_link_len)
 # define MAX2 ((*option)->max_user_len)
 # define MAX3 ((*option)->max_group_len)
@@ -74,6 +75,9 @@ typedef struct	s_options
 	int max_lower_num;
 	int	rec;
 	int	a;
+	int	d;
+	int	g;
+	int	f;
 	int	r;
 	int	t;
 	int	l;
@@ -105,7 +109,11 @@ void			ft_check_for_max(t_f **list, t_opt **option);
 void			ft_null_max(t_opt **option);
 void			ft_sort(t_list **list, int len);
 void			ft_sort_list(t_f **list, int len);
-void    ft_save(t_list  *file, t_list   *dir, t_opt **options);
+void    ft_save_dir(t_list  *file, t_list   *dir, t_opt **options);
 void    ft_save_and_print(char *name, t_opt **option);
+int	ft_len_of_struct(t_f *head);
+struct dirent	*ft_read_after_error(DIR *dir, char *path_name, struct dirent *inf, t_opt **option);
+void	ft_sort_tf(t_f **list, int len);
+void	ft_sort_tlist(t_list **list, int len);
 
 #endif

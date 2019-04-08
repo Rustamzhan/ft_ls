@@ -16,7 +16,7 @@ static void	ft_print_usage_error(char c)
 {
 	ft_putstr("ft_ls: illegal option -- ");
 	ft_putchar(c);
-	ft_putstr("\nusage: ft_ls [-Raclrtu] [file ...]\n");
+	ft_putstr("\nusage: ft_ls [-Racdgflrtu] [file ...]\n");
 	exit(2);
 }
 
@@ -24,6 +24,9 @@ static void	ft_save_option(char c, t_opt **opt)
 {
 	(*opt)->rec = (c == 'R') ? 1 : (*opt)->rec;
 	(*opt)->a = (c == 'a') ? 1 : (*opt)->a;
+	(*opt)->d = (c == 'd') ? 1 : (*opt)->d;
+	(*opt)->g = (c == 'g') ? 1 : (*opt)->g;
+	(*opt)->f = (c == 'f') ? 1 : (*opt)->f;
 	(*opt)->c = (c == 'c') ? 1 : (*opt)->c;
 	(*opt)->r = (c == 'r') ? 1 : (*opt)->r;
 	(*opt)->t = (c == 't') ? 1 : (*opt)->t;
@@ -38,6 +41,9 @@ static void	ft_zero_option(t_opt **o)
 	a = *o;
 	a->rec = 0;
 	a->a = 0;
+	a->d = 0;
+	a->g = 0;
+	a->f = 0;
 	a->l = 0;
 	a->r = 0;
 	a->t = 0;
@@ -66,7 +72,7 @@ int			ft_check_and_save_opt(int ac, char **av, t_opt **opt, int i)
 			j = 0;
 			while (av[i][++j] != '\0')
 			{
-				if (!ft_strchr("Raclrtu", av[i][j]))
+				if (!ft_strchr("Racdgflrtu", av[i][j]))
 				{
 					free(*opt);
 					ft_print_usage_error(av[i][j]);

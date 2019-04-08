@@ -50,8 +50,8 @@ static void	ft_print_l(t_f *list, t_opt *opt)
 	ft_print_spaces(opt->max_link_len, list->link_len);
 	ft_putstr(list->links_number);
 	write(1, " ", 1);
-	ft_putstr(list->owner_name);
-	ft_print_spaces(opt->max_user_len, list->user_len - 1);
+	(!opt->g) ? ft_putstr(list->owner_name) : 0;
+	(!opt->g) ? ft_print_spaces(opt->max_user_len, list->user_len - 1) : 0;
 	ft_putstr(list->group_name);
 	ft_print_spaces(opt->max_group_len, list->group_len);
 	if (list->type == 'b' || list->type == 'c')
@@ -75,12 +75,12 @@ void		print_list(t_f *list, t_opt *opt)
 	(opt->l && list && list->path_name) ? ft_putstr("\n") : 0;
 	while (list)
 	{
-		if ((opt->a || *(list->file_name) != '.'))
+		if ((opt->a || opt->d || opt->f || *(list->file_name) != '.'))
 		{
-			if (opt->l == 1)
+			if (opt->l)
 				ft_print_l(list, opt);
 			ft_putstr(list->file_name);
-			if (list->type == 'l')
+			if (opt->l && list->type == 'l')
 				ft_print_link(list->path_name);
 			write(1, "\n", 1);
 		}

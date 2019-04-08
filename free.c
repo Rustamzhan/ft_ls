@@ -46,7 +46,7 @@ void	ft_free_dir_list(t_f **list, t_opt *o)
 	t_f	*f;
 
 	f = *list;
-	while (f )
+	while (f)
 	{
 		free(f->path_name);
 		free(f->file_name);

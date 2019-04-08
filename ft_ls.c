@@ -114,10 +114,15 @@ int				main(int ac, char **av)
 		names = ft_check_for_errors_and_delete_badnames(names);
 		ft_save_sorted_files(names, &files);
 		ft_save_sorted_directories(names, &directories);
-		if (files)
-			ft_save_file_attr(files, &option);
-		if (directories)
-			ft_save(files, directories, &option);
+		if (option->d)
+			ft_save_file_attr(names, &option);
+		else
+		{
+			if (files)
+				ft_save_file_attr(files, &option);
+			if (directories)
+				ft_save_dir(files, directories, &option);
+		}
 		free(option);
 		free_names(&names, &files, &directories);
 	}

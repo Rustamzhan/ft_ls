@@ -84,8 +84,8 @@ void		ft_save_file_attr(t_list *names, t_opt **option)
 		names = names->next;
 	}
 	free(buf);
-	((*option)->t) ? ft_sort_by_time(&list) : 0;
-	((*option)->r) ? ft_rev_sort(&list) : 0;
+	((*option)->t && !((*option)->f)) ? ft_sort_by_time(&list) : 0;
+	((*option)->r && !((*option)->f)) ? ft_rev_sort(&list) : 0;
 	print_list(head, *option);
 	ft_free_files_list(&head, *option);
 }

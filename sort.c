@@ -17,6 +17,7 @@ static void	ft_rev(t_list **lst, int r)
 	t_list	*head;
 	t_list	*a;
 
+	head = *lst;
 	while ((*lst)->next)
 	{
 		if (ft_strcmp((*lst)->content, (*lst)->next->content) < 0)
@@ -72,7 +73,7 @@ t_list		*ft_save_sorted_names(int ac, char **av, t_opt *opt, int i)
 	}
 	if (!head->content)
 		head->content = ft_strdup(".");
-	ft_sort_struct(&head, opt->r);
+	(!(opt->f)) ? ft_sort_struct(&head, opt->r) : 0;
 	return (head);
 }
 

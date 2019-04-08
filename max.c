@@ -14,7 +14,7 @@
 
 void	ft_check_for_max(t_f **list, t_opt **option)
 {
-	if (A || *(*list)->file_name != '.')
+	if (A || *(*list)->file_name != '.' || (*option)->f)
 	{
 		CUR1 = ft_strlen((*list)->links_number);
 		MAX1 = (MAX1 < CUR1) ? CUR1 : MAX1;
@@ -43,4 +43,17 @@ void	ft_null_max(t_opt **option)
 	(*option)->max_upper_num = 0;
 	(*option)->max_lower_num = 0;
 	(*option)->all_bl = 0;
+}
+
+int	ft_len_of_struct(t_f *head)
+{
+	int	len;
+
+	len = 1;
+	while (head)
+	{
+		len++;
+		head = head->next;
+	}
+	return (len);
 }

@@ -17,12 +17,21 @@ void	ft_print_error(char *str)
 	int	i;
 
 	ft_putstr("ft_ls: ");
-	i  = 0;
+	i = 0;
 	while (str[i] != '\0')
 		i++;
-	while (str[i] != '/')
+	while (i > 0 && str[i] != '/')
 		i--;
-	perror(&(str[++i]));
+	if (str[i] == '/')
+		i++;
+	perror(&(str[i]));
+}
+
+struct dirent	*ft_read_after_error(DIR *dir, char *path_name, struct dirent *inf, t_opt **option)
+{
+	if (A || (!A && *(inf->d_name) != '.') || (*option)->f)
+        ft_print_error(path_name);
+    return (readdir(dir));
 }
 
 void	ft_rev_sort(t_f **list)

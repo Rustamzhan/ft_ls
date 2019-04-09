@@ -47,6 +47,7 @@ static void	ft_print_l(t_f *list, t_opt *opt)
 {
 	ft_putchar(list->type);
 	ft_putstr(list->acces);
+	write(1, " ", 1);
 	ft_print_spaces(opt->max_link_len, list->link_len);
 	ft_putstr(list->links_number);
 	write(1, " ", 1);

@@ -17,7 +17,7 @@ static void	ft_print_usage_error(char c)
 	ft_putstr("ft_ls: illegal option -- ");
 	ft_putchar(c);
 	ft_putstr("\nusage: ft_ls [-Racdgflrtu] [file ...]\n");
-	exit(2);
+	exit(1);
 }
 
 static void	ft_save_option(char c, t_opt **opt)

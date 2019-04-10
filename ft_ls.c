@@ -6,7 +6,7 @@
 /*   By: astanton <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/01 10:28:47 by astanton          #+#    #+#             */
-/*   Updated: 2019/04/02 20:23:28 by astanton         ###   ########.fr       */
+/*   Updated: 2019/04/09 11:13:57 by astanton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static void		ft_print_empty_task(t_list **name)
 	t_list	*cur;
 
 	cur = *name;
-	ft_sort_struct(name, 0);
+	ft_sort_tlist(name);
 	while (cur)
 	{
 		ft_putstr(cur->content);
@@ -70,30 +70,33 @@ static void		ft_error_use(t_list **names, t_list **head, t_list **prev)
 	*names = (*prev == *head) ? *prev : (*prev)->next;
 }
 
-static t_list	*ft_check_for_errors_and_delete_badnames(t_list *names)
+static int		ft_check_for_errors_and_delete_badnames(t_list **names)
 {
-	t_list		*head;
+	t_list		*cur;
 	t_list		*prev;
 	struct stat	*buf;
+	int			i;
 
-	prev = names;
-	head = names;
+	i = 0;
+	prev = *names;
+	cur = *names;
 	buf = (struct stat *)malloc(sizeof(struct stat));
-	while (names)
+	while (cur)
 	{
-		if (lstat(names->content, buf) == -1)
+		if (lstat(cur->content, buf) == -1)
 		{
-			ft_print_error(names->content);
-			ft_error_use(&names, &head, &prev);
+			i = 1;
+			ft_print_error_names(cur->content);
+			ft_error_use(&cur, names, &prev);
 		}
 		else
 		{
-			prev = names;
-			names = names->next;
+			prev = cur;
+			cur = cur->next;
 		}
 	}
 	free(buf);
-	return (head);
+	return (i);
 }
 
 int				main(int ac, char **av)
@@ -111,18 +114,13 @@ int				main(int ac, char **av)
 		i = 0;
 		i = ft_check_and_save_opt(ac, av, &option, i);
 		names = ft_save_sorted_names(ac, av, option, i);
-		names = ft_check_for_errors_and_delete_badnames(names);
-		ft_save_sorted_files(names, &files);
-		ft_save_sorted_directories(names, &directories);
+		i = ft_check_for_errors_and_delete_badnames(&names);
+		ft_save_sorted_files(names, &files, option);
+		ft_save_sorted_directories(names, &directories, option->one);
 		if (option->d)
 			ft_save_file_attr(names, &option);
 		else
-		{
-			if (files)
-				ft_save_file_attr(files, &option);
-			if (directories)
-				ft_save_dir(files, directories, &option);
-		}
+			ft_save_files_and_dirs(files, directories, &option, i);
 		free(option);
 		free_names(&names, &files, &directories);
 	}

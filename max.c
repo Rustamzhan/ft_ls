@@ -6,7 +6,7 @@
 /*   By: astanton <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/02 20:40:06 by astanton          #+#    #+#             */
-/*   Updated: 2019/04/02 20:40:44 by astanton         ###   ########.fr       */
+/*   Updated: 2019/04/09 10:52:21 by astanton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	ft_null_max(t_opt **option)
 	(*option)->all_bl = 0;
 }
 
-int	ft_len_of_struct(t_f *head)
+int		ft_len_of_struct(t_f *head)
 {
 	int	len;
 

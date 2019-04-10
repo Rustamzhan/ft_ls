@@ -1,39 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sort_dir.c                                         :+:      :+:    :+:   */
+/*   sort_by_size.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: astanton <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/02 20:30:10 by astanton          #+#    #+#             */
-/*   Updated: 2019/04/02 20:30:51 by astanton         ###   ########.fr       */
+/*   Created: 2019/04/10 02:25:12 by astanton          #+#    #+#             */
+/*   Updated: 2019/04/10 02:25:27 by astanton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-
-t_list		*ft_sort_by_names(DIR *dir, int r)
-{
-	struct dirent	*inf;
-	t_list			*cur;
-	t_list			*head;
-	int				len;
-
-	inf = readdir(dir);
-	cur = ft_lstnew(NULL, 0);
-	head = cur;
-	while (inf)
-	{
-		cur->content = ft_strdup(inf->d_name);
-		if ((inf = readdir(dir)))
-		{
-			cur->next = ft_lstnew(NULL, 0);
-			cur = cur->next;
-		}
-	}
-	ft_sort_tlist(&head);
-	return (head);
-}
 
 static void	ft_sort_massive(t_f **stack, int i, int len)
 {
@@ -43,7 +20,7 @@ static void	ft_sort_massive(t_f **stack, int i, int len)
 	count = 0;
 	while (--i > 0)
 	{
-		if (stack[i]->time > stack[i - 1]->time)
+		if (stack[i]->size > stack[i - 1]->size)
 		{
 			temp = stack[i];
 			stack[i] = stack[i - 1];
@@ -58,20 +35,7 @@ static void	ft_sort_massive(t_f **stack, int i, int len)
 	}
 }
 
-int			ft_list_len(t_f *list)
-{
-	int len;
-
-	len = 1;
-	while (list)
-	{
-		len++;
-		list = list->next;
-	}
-	return (len);
-}
-
-void		ft_sort_by_time(t_f **list)
+void		ft_sort_by_size(t_f **list)
 {
 	t_f	**stack;
 	t_f	*cur;

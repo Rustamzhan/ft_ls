@@ -6,7 +6,7 @@
 /*   By: astanton <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/01 10:24:03 by astanton          #+#    #+#             */
-/*   Updated: 2019/04/01 11:40:00 by astanton         ###   ########.fr       */
+/*   Updated: 2019/04/10 02:39:58 by astanton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # include <sys/xattr.h>
 # include <sys/types.h>
 # include <sys/stat.h>
-# include <sys/ioctl.h>
 # define MAX1 ((*option)->max_link_len)
 # define MAX2 ((*option)->max_user_len)
 # define MAX3 ((*option)->max_group_len)
@@ -54,6 +53,8 @@ typedef struct	s_file_attr
 	struct s_file_attr	*next;
 	struct s_file_attr	*prev;
 	struct s_file_attr	*recursive;
+	int					size;
+	int					check;
 	int					blocks;
 	int					link_len;
 	int					user_len;
@@ -74,46 +75,52 @@ typedef struct	s_options
 	int	max_upper_num;
 	int max_lower_num;
 	int	rec;
+	int	one;
 	int	a;
 	int	d;
 	int	g;
 	int	f;
+	int	p;
 	int	r;
+	int	sort;
 	int	t;
 	int	l;
 	int	u;
+	int	burn;
 	int	c;
 }				t_opt;
 
-static void		ft_create_and_print_at(char *name, t_opt **option, t_f **list);
-void			ft_save_sorted_directories(t_list *names, t_list **lst);
-void			ft_save_sorted_files(t_list *names, t_list **lst);
-t_list			*ft_save_sorted_names(int ac, char **av, t_opt *opt, int i);
-void			free_names(t_list **lst, t_list **f, t_list **d);
-void			ft_print_error(char *str);
-void			print_list(t_f *list, t_opt *opt);
 int				ft_check_and_save_opt(int ac, char **av, t_opt **opt, int i);
-void			ft_get_owner_and_group_name(uid_t uid, gid_t gid, t_f **list);
-char			*ft_get_acces(mode_t mode);
-char			ft_get_type(mode_t mode);
-char			*ft_get_time(time_t date);
+int				ft_len_of_struct(t_f *head);
+int				ft_list_len(t_f	*list);
 char			*ft_get_path(char *name, char *path);
-void			ft_save_dir_inf(t_list *file, t_list *name, t_opt **option);
+void			ft_get_time(time_t date, char **t);
+char			ft_get_type(mode_t mode);
+char			*ft_get_acces(mode_t mode);
+t_list			*ft_save_sorted_names(int ac, char **av, t_opt *opt, int i);
+void			ft_save_sorted_files(t_list *names, t_list **lst, t_opt *opt);
+void			ft_save_sorted_directories(t_list *names, t_list **lst, int o);
 void			ft_save_file_attr(t_list *names, t_opt **option);
-void			ft_sort_by_time(t_f **list);
-void			ft_free_dir_list(t_f **list, t_opt *o);
-void			ft_rev_sort(t_f **list);
-void			ft_sort_struct(t_list **lst, int r);
-t_list			*ft_sort_by_names(DIR *dir, int r);
+void			ft_save_dir(t_list *file, t_list *dir, t_opt **options, int i);
+void			ft_save_and_print(char *name, t_opt **option);
+void			free_names(t_list **lst, t_list **f, t_list **d);
+void			ft_print_error_names(char *str);
+void			ft_print_error(char *str);
+void			ft_get_owner_and_group_name(uid_t uid, gid_t gid, t_f **list);
 void			ft_check_for_max(t_f **list, t_opt **option);
 void			ft_null_max(t_opt **option);
-void			ft_sort(t_list **list, int len);
-void			ft_sort_list(t_f **list, int len);
-void    ft_save_dir(t_list  *file, t_list   *dir, t_opt **options);
-void    ft_save_and_print(char *name, t_opt **option);
-int	ft_len_of_struct(t_f *head);
-struct dirent	*ft_read_after_error(DIR *dir, char *path_name, struct dirent *inf, t_opt **option);
-void	ft_sort_tf(t_f **list, int len);
-void	ft_sort_tlist(t_list **list, int len);
+void			ft_rev_sort(t_f **list);
+void			ft_sort_by_time(t_f **list);
+void			ft_sort_by_size(t_f **list);
+void			ft_sort_tlist(t_list **list);
+void			ft_sort_tf(t_f **list);
+void			print_list(t_f *list, t_opt *opt);
+void			ft_free_dir_list(t_f **list, t_opt *o);
+void			ft_get_file_inf(t_f **list, t_opt **option, struct stat **buf);
+void			ft_save_files_and_dirs(t_list *files, t_list *directories,
+		t_opt **option, int i);
+struct dirent	*ft_read_after_error(DIR *dir, char *path_name,
+		struct dirent *inf, t_opt **option);
+struct dirent	*ft_save_inf(DIR **dir, t_f **list);
 
 #endif

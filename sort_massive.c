@@ -1,8 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sort_massive.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: astanton <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/04/09 10:55:50 by astanton          #+#    #+#             */
+/*   Updated: 2019/04/09 10:56:45 by astanton         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ls.h"
+
+static int	ft_listlen(t_list *list)
+{
+	int len;
+
+	len = 1;
+	while (list)
+	{
+		len++;
+		list = list->next;
+	}
+	return (len);
+}
 
 static void	ft_sort_massive_tlist(t_list **stack, int i, int len)
 {
-	int	count;
+	int		count;
 	t_list	*temp;
 
 	count = 0;
@@ -23,12 +48,14 @@ static void	ft_sort_massive_tlist(t_list **stack, int i, int len)
 	}
 }
 
-void	ft_sort_tlist(t_list **list, int len)
+void		ft_sort_tlist(t_list **list)
 {
 	t_list	**stack;
 	t_list	*cur;
 	int		i;
+	int		len;
 
+	len = ft_listlen(*list);
 	stack = malloc(sizeof(t_list *) * len);
 	cur = *list;
 	i = -1;
@@ -42,7 +69,7 @@ void	ft_sort_tlist(t_list **list, int len)
 	i = -1;
 	while (++i < len - 1)
 		stack[i]->next = stack[i + 1];
-	*list = stack[0];	
+	*list = stack[0];
 	free(stack);
 }
 
@@ -69,12 +96,14 @@ static void	ft_sort_massive_tf(t_f **stack, int i, int len)
 	}
 }
 
-void	ft_sort_tf(t_f **list, int len)
+void		ft_sort_tf(t_f **list)
 {
 	t_f	**stack;
 	t_f	*cur;
-	int		i;
+	int	i;
+	int	len;
 
+	len = ft_list_len(*list);
 	stack = malloc(sizeof(t_list *) * len);
 	cur = *list;
 	i = -1;
@@ -88,6 +117,6 @@ void	ft_sort_tf(t_f **list, int len)
 	i = -1;
 	while (++i < len - 1)
 		stack[i]->next = stack[i + 1];
-	*list = stack[0];	
+	*list = stack[0];
 	free(stack);
 }

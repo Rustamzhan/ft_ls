@@ -14,11 +14,11 @@ NAME = ft_ls
 
 SRCS = ./ft_ls.c ./free.c ./get_attributes.c ./print.c ./sort.c\
 	   ./save_and_check_options.c ./save_dir_attr.c ./sort_massive.c\
-	   ./save_file_attributes.c ./sort_dir.c ./max.c ./print1.c
+	   ./save_file_attributes.c ./sort_dir.c ./max.c ./trash.c ./sort_by_size.c
 
 OBJ =  ./ft_ls.o ./free.o ./get_attributes.o ./print.o ./sort.o\
 	   ./save_and_check_options.o ./save_dir_attr.o ./sort_massive.o\
-	   ./save_file_attributes.o ./sort_dir.o ./max.o ./print1.o
+	   ./save_file_attributes.o ./sort_dir.o ./max.o ./trash.o ./sort_by_size.o
 
 HDR = ./libft/includes/
 

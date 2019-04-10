@@ -6,57 +6,11 @@
 /*   By: astanton <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/01 11:15:49 by astanton          #+#    #+#             */
-/*   Updated: 2019/04/02 20:53:11 by astanton         ###   ########.fr       */
+/*   Updated: 2019/04/10 02:44:41 by astanton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-
-static void	ft_rev(t_list **lst, int r)
-{
-	t_list	*head;
-	t_list	*a;
-
-	head = *lst;
-	while ((*lst)->next)
-	{
-		if (ft_strcmp((*lst)->content, (*lst)->next->content) < 0)
-		{
-			a = (*lst)->content;
-			(*lst)->content = (*lst)->next->content;
-			(*lst)->next->content = a;
-			*lst = head;
-		}
-		else
-			*lst = (*lst)->next;
-	}
-}
-
-void		ft_sort_struct(t_list **lst, int r)
-{
-	t_list	*head;
-	t_list	*a;
-
-	head = *lst;
-	if (r)
-		ft_rev(lst, r);
-	else
-	{
-		while ((*lst)->next)
-		{
-			if (ft_strcmp((*lst)->content, (*lst)->next->content) > 0)
-			{
-				a = (*lst)->content;
-				(*lst)->content = (*lst)->next->content;
-				(*lst)->next->content = a;
-				*lst = head;
-			}
-			else
-				*lst = (*lst)->next;
-		}
-	}
-	*lst = head;
-}
 
 t_list		*ft_save_sorted_names(int ac, char **av, t_opt *opt, int i)
 {
@@ -73,11 +27,27 @@ t_list		*ft_save_sorted_names(int ac, char **av, t_opt *opt, int i)
 	}
 	if (!head->content)
 		head->content = ft_strdup(".");
-	(!(opt->f)) ? ft_sort_struct(&head, opt->r) : 0;
+	(!(opt->f)) ? ft_sort_tlist(&head) : 0;
 	return (head);
 }
 
-void		ft_save_sorted_files(t_list *names, t_list **lst)
+static void	ft_check_link(char *name, t_list **lst, struct stat **buf,
+							t_opt *opt)
+{
+	if (opt->one && ((stat(name, *buf) == 0 &&
+		!(S_ISDIR((*buf)->st_mode))) || (stat(name, *buf) == -1)))
+	{
+		(*lst)->content = ft_strdup(name);
+		(*lst)->next = NULL;
+	}
+	else if (!opt->one)
+	{
+		(*lst)->content = ft_strdup(name);
+		(*lst)->next = NULL;
+	}
+}
+
+void		ft_save_sorted_files(t_list *names, t_list **lst, t_opt *opt)
 {
 	t_list		*head;
 	struct stat	*buf;
@@ -87,17 +57,13 @@ void		ft_save_sorted_files(t_list *names, t_list **lst)
 	head = *lst;
 	while (names)
 	{
-		if (lstat(names->content, buf) == 0 &&
-				!(S_ISDIR(buf->st_mode & S_IFMT)))
+		if (lstat(names->content, buf) == 0 && !(S_ISDIR(buf->st_mode)))
+			ft_check_link(names->content, lst, &buf, opt);
+		if (names->next && lstat(names->next->content, buf) == 0 &&
+				(*lst)->content && !(S_ISDIR(buf->st_mode)))
 		{
-			(*lst)->content = ft_strdup(names->content);
-			(*lst)->next = NULL;
-			if (names->next && lstat(names->next->content, buf) == 0 &&
-					!(S_ISDIR(buf->st_mode & S_IFMT)))
-			{
-				(*lst)->next = malloc(sizeof(t_list));
-				*lst = (*lst)->next;
-			}
+			(*lst)->next = malloc(sizeof(t_list));
+			*lst = (*lst)->next;
 		}
 		names = names->next;
 	}
@@ -106,7 +72,7 @@ void		ft_save_sorted_files(t_list *names, t_list **lst)
 	free(buf);
 }
 
-void		ft_save_sorted_directories(t_list *names, t_list **lst)
+void		ft_save_sorted_directories(t_list *names, t_list **lst, int o)
 {
 	t_list		*head;
 	struct stat	*buf;
@@ -116,20 +82,30 @@ void		ft_save_sorted_directories(t_list *names, t_list **lst)
 	head = *lst;
 	while (names)
 	{
-		if (lstat(names->content, buf) == 0 && (S_ISDIR(buf->st_mode & S_IFMT)))
+		if ((o && (stat(names->content, buf) == 0 && (S_ISDIR(buf->st_mode))))
+			|| (lstat(names->content, buf) == 0 && (S_ISDIR(buf->st_mode))))
 		{
 			(*lst)->content = ft_strdup(names->content);
 			(*lst)->next = NULL;
-			if (names->next && lstat(names->next->content, buf) == 0 &&
-					(S_ISDIR(buf->st_mode & S_IFMT)))
-			{
-				(*lst)->next = malloc(sizeof(t_list));
-				*lst = (*lst)->next;
-			}
+		}
+		if (names->next && stat(names->next->content, buf) == 0 &&
+				(*lst)->content && (S_ISDIR(buf->st_mode)))
+		{
+			(*lst)->next = malloc(sizeof(t_list));
+			*lst = (*lst)->next;
 		}
 		names = names->next;
 	}
 	*lst = (!(head->content)) ? NULL : head;
 	(!(head->content)) ? free(head) : 0;
 	free(buf);
+}
+
+void		ft_print_error_names(char *str)
+{
+	ft_putstr_fd("ft_ls: ", 2);
+	if (str && str[0] == '\0')
+		perror("fts_open");
+	else
+		perror(str);
 }

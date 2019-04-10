@@ -25,10 +25,12 @@ static void	ft_print_spaces(int max, int cur)
 
 static void	ft_print_dev(t_f *list, t_opt *opt)
 {
-	ft_print_spaces(opt->max_upper_num, list->upper_len - 1);
+	if (opt->max_size_len > 8)
+		opt->max_upper_num = opt->max_size_len - 3;
+	ft_print_spaces(3, list->upper_len);
 	ft_putstr(list->upper_num);
 	write(1, ",", 1);
-	ft_print_spaces(opt->max_lower_num, list->lower_len);
+	ft_print_spaces(3, list->lower_len);
 	ft_putstr(list->lower_num);
 }
 
@@ -59,8 +61,8 @@ static void	ft_print_l(t_f *list, t_opt *opt)
 		ft_print_dev(list, opt);
 	else
 	{
-		(opt->max_upper_num) ?
-			ft_print_spaces(opt->max_upper_num + opt->max_lower_num + 1, 0) : 0;
+		if (opt->max_upper_num && opt->max_size_len < 8)
+			opt->max_size_len = 8;
 		ft_print_spaces(opt->max_size_len, list->size_len);
 		ft_putstr(list->size_of_file);
 	}
@@ -71,16 +73,17 @@ static void	ft_print_l(t_f *list, t_opt *opt)
 
 void		print_list(t_f *list, t_opt *opt)
 {
-	(opt->l && list && list->path_name) ? ft_putstr("total ") : 0;
-	(opt->l && list && list->path_name) ? ft_putnbr(opt->all_bl) : 0;
-	(opt->l && list && list->path_name) ? ft_putstr("\n") : 0;
+	((opt->l || opt->g) && list && list->check) ? ft_putstr("total ") : 0;
+	((opt->l || opt->g) && list && list->check) ? ft_putnbr(opt->all_bl) : 0;
+	((opt->l || opt->g) && list && list->check) ? ft_putstr("\n") : 0;
 	while (list)
 	{
 		if ((opt->a || opt->d || opt->f || *(list->file_name) != '.'))
 		{
-			if (opt->l)
+			if (opt->l || opt->g)
 				ft_print_l(list, opt);
 			ft_putstr(list->file_name);
+			(opt->p && list->type == 'd') ? ft_putchar('/') : 0;
 			if (opt->l && list->type == 'l')
 				ft_print_link(list->path_name);
 			write(1, "\n", 1);

@@ -6,7 +6,7 @@
 /*   By: astanton <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/01 10:37:32 by astanton          #+#    #+#             */
-/*   Updated: 2019/04/01 10:42:42 by astanton         ###   ########.fr       */
+/*   Updated: 2019/04/10 02:38:09 by astanton         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,50 +31,49 @@ char	*ft_get_path(char *name, char *path)
 	return (str);
 }
 
-char	*ft_get_time(time_t date)
+void	ft_get_time(time_t date, char **t)
 {
 	char	*str;
-	char	*t;
 	int		i;
 	int		j;
 
 	i = 3;
 	j = -1;
 	str = ctime(&date);
-	t = malloc(sizeof(char) * 13);
-	while (++i < 10)
-		t[++j] = str[i];
-	if (time(NULL) - date > 15552000 || (date - time(NULL) > 3600))
-		{
-			i = 18;
-			t[++j] = ' ';
-			while (++i < 24)
-				t[++j] = str[i];
-		}
-	else
+	*t = malloc(sizeof(char) * 13);
+	while (++i < 11)
+		(*t)[++j] = str[i];
+	if (time(NULL) - date > 15811200 || (date - time(NULL) > 0))
 	{
-		while (i < 16)
-			t[++j] = str[i++];
+		i = 18;
+		while (++i < 24)
+			(*t)[++j] = str[i];
+		((*t)[j] == ' ') ? (j -= 4) : 0;
+		if ((*t)[j] == ' ')
+			while (i < 29)
+				(*t)[++j] = str[i++];
 	}
-	t[++j] = '\0';
-	return (t);
+	else
+		while (i < 16)
+			(*t)[++j] = str[i++];
+	(*t)[++j] = '\0';
 }
 
 char	ft_get_type(mode_t mode)
 {
-	if (S_ISREG(mode & S_IFMT))
+	if (S_ISREG(mode))
 		return ('-');
-	else if (S_ISDIR(mode & S_IFMT))
+	else if (S_ISDIR(mode))
 		return ('d');
-	else if (S_ISCHR(mode & S_IFMT))
+	else if (S_ISCHR(mode))
 		return ('c');
-	else if (S_ISBLK(mode & S_IFMT))
+	else if (S_ISBLK(mode))
 		return ('b');
-	else if (S_ISFIFO(mode & S_IFMT))
+	else if (S_ISFIFO(mode))
 		return ('p');
-	else if (S_ISSOCK(mode & S_IFMT))
+	else if (S_ISSOCK(mode))
 		return ('s');
-	else if (S_ISLNK(mode & S_IFMT))
+	else if (S_ISLNK(mode))
 		return ('l');
 	else
 		return ('-');

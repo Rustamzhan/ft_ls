@@ -12,29 +12,6 @@
 
 #include "ft_ls.h"
 
-t_list		*ft_sort_by_names(DIR *dir, int r)
-{
-	struct dirent	*inf;
-	t_list			*cur;
-	t_list			*head;
-	int				len;
-
-	inf = readdir(dir);
-	cur = ft_lstnew(NULL, 0);
-	head = cur;
-	while (inf)
-	{
-		cur->content = ft_strdup(inf->d_name);
-		if ((inf = readdir(dir)))
-		{
-			cur->next = ft_lstnew(NULL, 0);
-			cur = cur->next;
-		}
-	}
-	ft_sort_tlist(&head);
-	return (head);
-}
-
 static void	ft_sort_massive(t_f **stack, int i, int len)
 {
 	int	count;

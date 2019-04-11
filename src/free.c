@@ -12,7 +12,7 @@
 
 #include "ft_ls.h"
 
-void	free_names(t_list **lst, t_list **f, t_list **d)
+void		free_names(t_list **lst, t_list **f, t_list **d)
 {
 	t_list *cur;
 
@@ -41,7 +41,25 @@ void	free_names(t_list **lst, t_list **f, t_list **d)
 	}
 }
 
-void	ft_free_dir_list(t_f **list, t_opt *o)
+static void	ft_free_l(t_f **list)
+{
+	t_f	*f;
+
+	f = *list;
+	free(f->time_str);
+	free(f->links_number);
+	free(f->size_of_file);
+	free(f->acces);
+	free(f->owner_name);
+	free(f->group_name);
+	if ((*list)->type == 'b' || (*list)->type == 'c')
+	{
+		free(f->upper_num);
+		free(f->lower_num);
+	}
+}
+
+void		ft_free_dir_list(t_f **list, t_opt *o)
 {
 	t_f	*f;
 
@@ -51,14 +69,7 @@ void	ft_free_dir_list(t_f **list, t_opt *o)
 		free(f->path_name);
 		free(f->file_name);
 		if (o->l)
-		{
-			free(f->time_str);
-			free(f->links_number);
-			free(f->size_of_file);
-			free(f->acces);
-			free(f->owner_name);
-			free(f->group_name);
-		}
+			ft_free_l(&f);
 		f = f->next;
 		free(*list);
 		*list = NULL;

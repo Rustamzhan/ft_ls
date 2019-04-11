@@ -46,10 +46,11 @@ FLAG = -Wall -Wextra -Werror
 
 all: $(NAME)
 
-$(NAME):
-	gcc $(FLAG) -c $(SRCS) -I $(HDR)
+$(NAME): $(OBJ)
 	ar -rc $(NAME) $(OBJ)
-	ranlib $(NAME)
+
+$(OBJ): %.o: %.c
+	gcc $(FLAG) -c -I $(HDR) $< -o $@
 
 clean:
 	rm -f $(OBJ)

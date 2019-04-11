@@ -16,8 +16,8 @@ static void		ft_print_empty_task(t_list **name)
 {
 	t_list	*cur;
 
-	cur = *name;
 	ft_sort_tlist(name);
+	cur = *name;
 	while (cur)
 	{
 		ft_putstr(cur->content);

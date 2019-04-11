@@ -62,7 +62,6 @@ typedef struct	s_file_attr
 	int					size_len;
 	int					upper_len;
 	int					lower_len;
-	int					error;
 }				t_f;
 
 typedef struct	s_options
@@ -116,7 +115,7 @@ void			ft_sort_tlist(t_list **list);
 void			ft_sort_tf(t_f **list);
 void			print_list(t_f *list, t_opt *opt);
 void			ft_free_dir_list(t_f **list, t_opt *o);
-void			ft_get_file_inf(t_f **list, t_opt **option, struct stat **buf);
+void			ft_get_file_inf(t_f **list, t_opt **option, struct stat *buf);
 void			ft_save_files_and_dirs(t_list *files, t_list *directories,
 		t_opt **option, int i);
 struct dirent	*ft_read_after_error(DIR *dir, char *path_name,

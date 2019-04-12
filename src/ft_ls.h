@@ -52,7 +52,6 @@ typedef struct	s_file_attr
 	char				*file_name;
 	struct s_file_attr	*next;
 	struct s_file_attr	*prev;
-	struct s_file_attr	*recursive;
 	int					size;
 	int					check;
 	int					blocks;
@@ -118,7 +117,7 @@ void			ft_free_dir_list(t_f **list, t_opt *o);
 void			ft_get_file_inf(t_f **list, t_opt **option, struct stat *buf);
 void			ft_save_files_and_dirs(t_list *files, t_list *directories,
 		t_opt **option, int i);
-struct dirent	*ft_read_after_error(DIR *dir, char *path_name,
+struct dirent	*ft_read_after_error(DIR *dir, char **path_name,
 		struct dirent *inf, t_opt **option);
 struct dirent	*ft_save_inf(DIR **dir, t_f **list);
 

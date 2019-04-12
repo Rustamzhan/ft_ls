@@ -32,11 +32,12 @@ void			ft_print_error(char *str)
 	}
 }
 
-struct dirent	*ft_read_after_error(DIR *dir, char *path_name,
+struct dirent	*ft_read_after_error(DIR *dir, char **path_name,
 		struct dirent *inf, t_opt **option)
 {
 	if (A || (!A && *(inf->d_name) != '.') || (*option)->f)
-		ft_print_error(path_name);
+		ft_print_error(*path_name);
+	free(*path_name);
 	return (readdir(dir));
 }
 

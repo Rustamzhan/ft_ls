@@ -74,18 +74,20 @@ static void	ft_save_attr(DIR *dir, char *name, t_opt **option, t_f **head)
 	{
 		path_name = ft_get_path(inf->d_name, name);
 		if (lstat(path_name, &buf) == -1)
-			inf = ft_read_after_error(dir, path_name, inf, option);
+			inf = ft_read_after_error(dir, &path_name, inf, option);
 		else if (A || (!A && *(inf->d_name) != '.') || (*option)->f)
 		{
 			list = (*head) ? list->next : malloc(sizeof(t_f));
 			*head = (*head) ? *head : list;
-			list->path_name = ft_strdup(path_name);
+			list->path_name = path_name;
 			save_attr(&list, option, &buf, inf);
 			inf = ft_save_inf(&dir, &list);
 		}
 		else
+		{
 			inf = readdir(dir);
-		free(path_name);
+			free(path_name);
+		}
 	}
 }
 
